@@ -1,4 +1,3 @@
-
 # Encontro 3 - Dicionário e Acervo
 # Programação para Desktop e Web
 
