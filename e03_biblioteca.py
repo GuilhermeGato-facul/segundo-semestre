@@ -1,6 +1,3 @@
-# Encontro 3 - Dicionário e Acervo
-# Programação para Desktop e Web
-
 acervo = []
 
 while True:
@@ -64,11 +61,12 @@ while True:
 
 
 # Respostas da Parte 4:
+
 # 1. O que impede você de criar um livro sem ano?
-# O programa pede o ano e usa int() para cadastrar o livro.
+# O programa pede o ano no cadastro e usa int() para receber o valor.
 
 # 2. O que impede alguém de escrever "ano": "mil oitocentos"?
-# Nada neste programa impede; seria necessário validar o tipo do ano.
+# O uso de int() impede que um texto seja cadastrado como ano.
 
 # 3. Se amanhã todo livro precisar de editora, em quantos lugares do seu código você tem que mexer?
-# Será necessário alterar o cadastro e os pontos onde os dados do livro são tratados.
+# Será necessário alterar o cadastro do livro e os locais onde os dados do livro são tratados.
