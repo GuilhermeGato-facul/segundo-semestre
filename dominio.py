@@ -61,10 +61,8 @@ class Emprestimo:
 if __name__ == "__main__":
     livro = Livro("Dom Casmurro", "Machado de Assis", 1899)
 
-    # 1 - Livro impresso usando __str__
     print(livro)
 
-    # 2 - Tentativa de alterar o ano para um valor invalido
     try:
         livro.ano = 3000
     except ValueError as erro:
@@ -72,19 +70,15 @@ if __name__ == "__main__":
 
     print(livro.ano)
 
-    # 3 - Usuario e emprestimo
     ana = Usuario("Ana Souza", "2026001")
     emp = Emprestimo(livro, ana, "20/08/2026")
 
     print(emp)
 
-    # 4 - Navegando de um objeto para o outro
     print(emp.livro.autor)
     print(emp.usuario.matricula)
 
-    # 5 - Devolucao
     emp.devolver()
     print(emp)
 
-    # Segunda devolucao deve dar erro
     emp.devolver()
