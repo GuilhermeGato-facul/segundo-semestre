@@ -1,73 +1,80 @@
-from acervo import cadastrar, buscar, listar
+from dominio.livro import Livro
+from dominio.usuario import Usuario
+from dominio.emprestimo import Emprestimo
 
 
-def ler_ano():
-    while True:
+acervo = []
+emprestimos = []
+
+usuario = Usuario("Aluno", "0000")
+
+
+while True:
+    print()
+    print("=== BIBLIOTECA ===")
+    print("1 - Cadastrar livro")
+    print("2 - Listar acervo")
+    print("3 - Emprestar")
+    print("0 - Sair")
+
+    opcao = input("Opcao: ")
+
+
+    if opcao == "1":
+        titulo = input("Titulo: ")
+        autor = input("Autor: ")
+
         try:
-            return int(input("Ano de publicação: "))
-        except ValueError:
-            print("Digite um ano válido.")
+            ano = int(input("Ano: "))
+
+            acervo.append(
+                Livro(titulo, autor, ano)
+            )
+
+            print("Livro cadastrado.")
+
+        except ValueError as erro:
+            print("Nao deu:", erro)
 
 
-def cadastrar_livro(acervo):
-    titulo = input("Título: ")
-    autor = input("Autor: ")
-    ano = ler_ano()
+    elif opcao == "2":
+        if not acervo:
+            print("Acervo vazio.")
 
-    cadastrar(acervo, titulo, autor, ano)
-    print("Livro cadastrado com sucesso!")
-
-
-def consultar_livro(acervo):
-    titulo = input("Título para consultar: ")
-    livro = buscar(acervo, titulo)
-
-    if livro:
-        print("Título:", livro["titulo"])
-        print("Autor:", livro["autor"])
-        print("Ano:", livro["ano"])
-    else:
-        print("Livro não encontrado.")
+        for livro in acervo:
+            print("-", livro)
 
 
-def listar_livros(acervo):
-    livros = listar(acervo)
+    elif opcao == "3":
+        procurado = input("Titulo: ")
+        escolhido = None
 
-    if not livros:
-        print("O acervo está vazio.")
-        return
+        for livro in acervo:
+            if livro.titulo.lower() == procurado.lower():
+                escolhido = livro
 
-    for livro in livros:
-        print(
-            f'{livro["titulo"]} - '
-            f'{livro["autor"]} ({livro["ano"]})'
-        )
+        if escolhido is None:
+            print("Nao esta no acervo.")
 
-    print("Total:", len(livros))
-
-
-def main():
-    acervo = []
-
-    while True:
-        print("\n1 - Cadastrar")
-        print("2 - Consultar")
-        print("3 - Listar")
-        print("4 - Sair")
-
-        opcao = input("Escolha uma opção: ")
-
-        if opcao == "1":
-            cadastrar_livro(acervo)
-        elif opcao == "2":
-            consultar_livro(acervo)
-        elif opcao == "3":
-            listar_livros(acervo)
-        elif opcao == "4":
-            break
         else:
-            print("Opção inválida.")
+            emprestimos.append(
+                Emprestimo(
+                    escolhido,
+                    usuario,
+                    "24/08/2026"
+                )
+            )
+
+            print(
+                "Emprestado:",
+                emprestimos[-1]
+            )
 
 
-if __name__ == "__main__":
-    main()
+    elif opcao == "0":
+        print("Ate logo.")
+        break
+
+
+    else:
+        print("Opcao invalida.")

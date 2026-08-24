@@ -1,32 +1,28 @@
-def cadastrar(acervo, titulo, autor, ano):
-    livro = {
-        "titulo": titulo,
-        "autor": autor,
-        "ano": ano
-    }
+class Livro:
+    def __init__(self, titulo, autor, ano):
+        if not titulo:
+            raise ValueError("Titulo e obrigatorio")
 
-    acervo.append(livro)
+        self.titulo = titulo
+        self.autor = autor
+        self.ano = ano
 
+    @property
+    def ano(self):
+        return self._ano
 
-def buscar(acervo, titulo):
-    for livro in acervo:
-        if livro["titulo"].lower() == titulo.lower():
-            return livro
+    @ano.setter
+    def ano(self, valor):
+        if valor < 1450 or valor > 2026:
+            raise ValueError(f"Ano invalido: {valor}")
 
-    return None
+        self._ano = valor
 
+    def descricao(self):
+        return f"{self.titulo} - {self.autor} ({self.ano})"
 
-def listar(acervo):
-    return acervo
+    def idade(self):
+        return 2026 - self.ano
 
-
-if __name__ == "__main__":
-    acervo = []
-
-    cadastrar(acervo, "Dom Casmurro", "Machado de Assis", 1899)
-
-    print(buscar(acervo, "Dom Casmurro"))
-    print(listar(acervo))
-
-    acervo_vazio = []
-    print(buscar(acervo_vazio, "Dom Casmurro"))
+    def __str__(self):
+        return self.descricao()
