@@ -6,14 +6,13 @@ from dominio.emprestimo import Emprestimo
 
 
 acervo = [
-    Livro("Vidas Secas", "Graciliano Ramos", 1938),
-    Livro("Capitaes da Areia", "Jorge Amado", 1937),
-    Livro("A Hora da Estrela", "Clarice Lispector", 1977),
+    Livro("Dom Casmurro", "Machado de Assis", 1899),
+    Livro("Iracema", "Jose de Alencar", 1865),
+    Livro("O Cortico", "Aluisio Azevedo", 1890),
 ]
 
 emprestimos = []
-
-usuario = Usuario("Estudante", "0001")
+usuario = Usuario("Aluno", "0000")
 
 
 janela = tk.Tk()
@@ -74,7 +73,7 @@ def emprestar():
     emprestimo = Emprestimo(
         escolhido,
         usuario,
-        "31/08/2026"
+        "27/08/2026"
     )
 
     emprestimos.append(emprestimo)
