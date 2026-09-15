@@ -3,21 +3,21 @@ import tkinter as tk
 from dominio.livro import Livro
 from dominio.usuario import Usuario
 from dominio.emprestimo import Emprestimo
+from dados.repositorio_livro import RepositorioLivro
 
 
-acervo = [
-    Livro("Dom Casmurro", "Machado de Assis", 1899),
-    Livro("Iracema", "Jose de Alencar", 1865),
-    Livro("O Cortico", "Aluisio Azevedo", 1890),
-]
+repositorio = RepositorioLivro()
+
+livros_na_tela = []
 
 emprestimos = []
+
 usuario = Usuario("Aluno", "0000")
 
 
 janela = tk.Tk()
 janela.title("Biblioteca")
-janela.geometry("460x500")
+janela.geometry("460x560")
 
 
 tk.Label(
@@ -32,9 +32,6 @@ lista = tk.Listbox(
     width=52,
     height=6
 )
-
-for livro in acervo:
-    lista.insert(tk.END, str(livro))
 
 lista.pack(padx=10)
 
@@ -54,12 +51,37 @@ resultado = tk.Label(
 )
 
 
+def atualizar_lista():
+    lista.delete(0, tk.END)
+
+    livros_na_tela.clear()
+
+    for livro in repositorio.listar():
+        livros_na_tela.append(livro)
+        lista.insert(tk.END, str(livro))
+
+
+def livro_selecionado():
+    selecionados = lista.curselection()
+
+    if not selecionados:
+        resultado.config(
+            text="Selecione um livro na lista.",
+            fg="red"
+        )
+        return None
+
+    posicao = selecionados[0]
+
+    return livros_na_tela[posicao]
+
+
 def emprestar():
     procurado = campo.get()
 
     escolhido = None
 
-    for item in acervo:
+    for item in repositorio.listar():
         if item.titulo.lower() == procurado.lower():
             escolhido = item
 
@@ -73,7 +95,7 @@ def emprestar():
     emprestimo = Emprestimo(
         escolhido,
         usuario,
-        "27/08/2026"
+        "14/09/2026"
     )
 
     emprestimos.append(emprestimo)
@@ -149,7 +171,11 @@ campo_titulo = tk.Entry(
     width=28
 )
 
-campo_titulo.grid(row=0, column=1, pady=2)
+campo_titulo.grid(
+    row=0,
+    column=1,
+    pady=2
+)
 
 
 tk.Label(
@@ -162,7 +188,11 @@ campo_autor = tk.Entry(
     width=28
 )
 
-campo_autor.grid(row=1, column=1, pady=2)
+campo_autor.grid(
+    row=1,
+    column=1,
+    pady=2
+)
 
 
 tk.Label(
@@ -175,14 +205,11 @@ campo_ano = tk.Entry(
     width=28
 )
 
-campo_ano.grid(row=2, column=1, pady=2)
-
-
-def atualizar_lista():
-    lista.delete(0, tk.END)
-
-    for livro in acervo:
-        lista.insert(tk.END, str(livro))
+campo_ano.grid(
+    row=2,
+    column=1,
+    pady=2
+)
 
 
 def cadastrar():
@@ -197,7 +224,7 @@ def cadastrar():
             int(ano)
         )
 
-        acervo.append(livro)
+        repositorio.salvar(livro)
 
         atualizar_lista()
 
@@ -217,6 +244,49 @@ def cadastrar():
         )
 
 
+def excluir():
+    livro = livro_selecionado()
+
+    if livro is None:
+        return
+
+    repositorio.excluir(livro.id)
+
+    atualizar_lista()
+
+    resultado.config(
+        text="Excluido: " + livro.titulo,
+        fg="blue"
+    )
+
+
+def alterar():
+    livro = livro_selecionado()
+
+    if livro is None:
+        return
+
+    try:
+        livro.titulo = campo_titulo.get()
+        livro.autor = campo_autor.get()
+        livro.ano = int(campo_ano.get())
+
+        repositorio.atualizar(livro)
+
+        atualizar_lista()
+
+        resultado.config(
+            text="Alterado: " + str(livro),
+            fg="blue"
+        )
+
+    except ValueError as erro:
+        resultado.config(
+            text=str(erro),
+            fg="red"
+        )
+
+
 tk.Button(
     janela,
     text="Cadastrar",
@@ -224,4 +294,32 @@ tk.Button(
 ).pack(pady=6)
 
 
+botoes = tk.Frame(janela)
+botoes.pack()
+
+
+tk.Button(
+    botoes,
+    text="Excluir",
+    command=excluir
+).pack(
+    side="left",
+    padx=4
+)
+
+
+tk.Button(
+    botoes,
+    text="Alterar",
+    command=alterar
+).pack(
+    side="left",
+    padx=4
+)
+
+
+atualizar_lista()
+
 janela.mainloop()
+
+repositorio.fechar()
